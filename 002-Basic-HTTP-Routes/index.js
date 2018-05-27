@@ -7,21 +7,10 @@ http.createServer(function (request, response) {
   const {pathname,query} = url.parse(request.url);
 
   //variable list_query is used to store queries in an array, if there are multiple queries
-  var list_query=query.split("&/");
+  var list_query=query.split("&");
 
   console.log("\nTotal queries are "+list_query.length);
-  
-  //Removing Resource Name from the query, as only 1 resource is available to us.
-  for(var j=1;j<list_query.length;j++)
-  {
-      for(var i=0;i<list_query[j].length;i++)
-      {
-        if(list_query[j].charAt(i)=='?')
-        {
-          list_query[j]=list_query[j].slice(i+1);
-        }
-      }
-  }
+
   var results=[];
   if(list_query.length==1)
   {
@@ -60,6 +49,8 @@ http.createServer(function (request, response) {
         case 2:
             for(var counter=0;counter<data.length;counter++)
             {
+              if((data[counter][key_value[0]])=="n/a"||(data[counter][key_value[0]])=="unknown")
+                continue;
               if((data[counter][key_value[0]]).includes(key_value[1])==true)
               {
                   console.log(data[counter][key_value[0]]);
@@ -74,6 +65,11 @@ http.createServer(function (request, response) {
             var val2=key_value[1];                    // val2 is the value from the query
             val1=parseInt(val1);
             val2=parseInt(val2);
+            if(isNaN(val1)||isNaN(val2))
+            {
+            console.log("NaN found");
+            flag=0;
+            }
             if((val1)>(val2))
             {
                 console.log(data[counter][key_value[0]]);
@@ -89,6 +85,11 @@ http.createServer(function (request, response) {
               var val2=key_value[1];
               val1=parseInt(val1);
               val2=parseInt(val2);
+              if(isNaN(val1)||isNaN(val2))
+              {
+              console.log("NaN found");
+              flag=0;
+              }
               if((val1)<(val2))
                 {
                     console.log(data[counter][key_value[0]]);
@@ -103,6 +104,11 @@ http.createServer(function (request, response) {
               var val2=key_value[1];
               val1=parseInt(val1);
               val2=parseInt(val2);
+              if(isNaN(val1)||isNaN(val2))
+              {
+              console.log("NaN found");
+              flag=0;
+              }
               if((val1)==(val2))
                 {
                     console.log(data[counter][key_value[0]]);
@@ -160,6 +166,9 @@ http.createServer(function (request, response) {
           switch(sign)
               {
                 case 2:
+                  if((data[data_loop][key_value[query_loop][0]])=="n/a"||(data[data_loop][key_value[query_loop][0]])=="unknown")
+                    flag=0;
+                  else
                     if((data[data_loop][key_value[query_loop][0]]).includes(key_value[query_loop][1])==false)
                         flag=0;
                     break;
@@ -168,6 +177,11 @@ http.createServer(function (request, response) {
                     var val2=key_value[query_loop][1];
                     val1=parseInt(val1);
                     val2=parseInt(val2);
+                  if(isNaN(val1)||isNaN(val2))
+                    {
+                    console.log("NaN found");
+                    flag=0;
+                    }
                     if((val1)<=(val2))
                         flag=0;
                     break;
@@ -176,6 +190,12 @@ http.createServer(function (request, response) {
                     var val2=key_value[query_loop][1];
                     val1=parseInt(val1);
                     val2=parseInt(val2);
+			
+                      if(isNaN(val1)||isNaN(val2))
+                        {
+                        console.log("NaN found");
+                        flag=0;
+                        }
                     if((val1)>=(val2))
                         flag=0;
                     break;
@@ -186,6 +206,12 @@ http.createServer(function (request, response) {
                     var val2=key_value[1];
                     val1=parseInt(val1);
                     val2=parseInt(val2);
+			
+                      if(isNaN(val1)||isNaN(val2))
+                        {
+                        console.log("NaN found");
+                        flag=0;
+                        }
                     if((val1)!=(val2))
                         flag=0;
                       break;
