@@ -9,6 +9,7 @@ http.createServer(function (request, response) {
 
   var query_list= query.split('&');
   var filter_query=data;
+  var p_name = new Array();
 
   console.log("pathname:", pathname);
   console.log("queryParameters:", query);
@@ -20,15 +21,17 @@ http.createServer(function (request, response) {
 
     if(query_list[j].includes('=')){
       q=query_list[j].split('=');
-      console.log(q);
+      //console.log(q);
       if( q[1].includes('%22') || q[1].includes('%27')){
       q[1] = q[1].slice(3,-3);
       
       filter_query = filter_query.filter( x => x[q[0]].includes(q[1]))   
-
+      p_name.push(q[0]);
       }
       else{
         filter_query = filter_query.filter( x => x[q[0]]==parseInt(q[1]));
+        p_name.push(q[0]);
+
       }      
 
     }
@@ -36,28 +39,29 @@ http.createServer(function (request, response) {
       q = query_list[j].split('%3E');
       console.log(q);
       filter_query = filter_query.filter( x => x[q[0]]>parseInt(q[1]));
+      p_name.push(q[0]);
+
       
     }
 
     else if(query_list[j].includes('%3C')){
       q = query_list[j].split('%3C');
       console.log(q);
-      filter_query = filter_query.filter( x => x[q[0]]<parseInt(q[1]));     
+      filter_query = filter_query.filter( x => x[q[0]]<parseInt(q[1]));   
+      p_name.push(q[0]);
+  
     }
    
   }
 
-   filter_query=filter_query.map(  filter_query => {
+   filter_query = filter_query.map(  filter_query => {
      y={};
      
-     y.name = filter_query.name;
-     y.height = filter_query.height;
-     y.mass = filter_query.mass;
-     y.hair_color = filter_query.hair_color;
-     y.skin_color = filter_query.skin_color;
-     y.eye_color = filter_query.eye_color;
-     y.gender = filter_query.gender;
-     
+     // y['name'] = filter_query['name'];
+     for(i =0;i<p_name.length;i++){
+       y[p_name[i]] = filter_query[p_name[i]];
+
+     }     
       return y;
      
    });
@@ -69,10 +73,11 @@ http.createServer(function (request, response) {
       'Content-type': 'text/plain'
     });
     response.write(' Status returned: 200');
+    
    }
    else{
      response.writeHead(404);
-     response.write("Error 404");
+     response.write("Error 404: Data not found");
    }
 
 response.end();  
