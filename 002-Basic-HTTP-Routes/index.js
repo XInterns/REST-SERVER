@@ -17,6 +17,7 @@ http.createServer(function (request, response) {
       
       //variable data_loop is used to iterate over all the records in data(JSON) file
       
+      var key_value=[];
       for(var data_loop=0;data_loop<data.length;data_loop++)
       {
 
@@ -26,7 +27,6 @@ http.createServer(function (request, response) {
         */
         var flag=1;           
         var sign;
-        var key_value=[];
         var name_of_character=data[data_loop].name;
           for(var query_loop=0;query_loop<list_query.length&&flag==1;query_loop++)
           {
@@ -109,7 +109,9 @@ http.createServer(function (request, response) {
               } 
           }
           if(flag==1)
-            results.push(data_loop);
+            {
+              results.push(data_loop);
+            }
       }
   
   console.log("pathname", pathname);
@@ -126,7 +128,16 @@ http.createServer(function (request, response) {
     'Content-type': 'text/plain'});
 
   for(var count_response=0;count_response<results.length;count_response++)
-  response.write(data[results[count_response]].name+'\n');
-  response.end();
-
+  {
+    response.write("\nRecord "+(count_response+1)+'\n');
+    response.write('Name :-'+data[results[count_response]].name);
+    for(var count_query=0;count_query<list_query.length;count_query++)
+    {
+      if(key_value[count_query][0]=='name')
+      continue;
+      response.write('\n'+key_value[count_query][0]+' :- '+data[results[count_response]][key_value[count_query][0]]+'\t');
+    }
+  }
+ response.end();
 }).listen(7000);
+
