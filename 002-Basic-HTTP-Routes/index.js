@@ -5,118 +5,50 @@ var data = require('./data.json');
 http.createServer(function (request, response) {
 
   const {pathname,query} = url.parse(request.url);
-
+  console.log(query);
   //variable list_query is used to store queries in an array, if there are multiple queries
   var list_query=query.split("&");
-
-  console.log("\nTotal queries are "+list_query.length);
-
   var results=[];
-
-      //This section works, when there are multiple queries in same link
-      
-      //variable data_loop is used to iterate over all the records in data(JSON) file
-      
-      var key_value=[];
-      for(var data_loop=0;data_loop<data.length;data_loop++)
+  var object=data;
+  var key_value=[];
+  for(var query_loop=0;query_loop<list_query.length;query_loop++)
       {
-
-        /*
-        In this section we will, for each existing record, check wheather it satisfy all the 
-        query condtions
-        */
-        var flag=1;           
-        var sign;
-        var name_of_character=data[data_loop].name;
-          for(var query_loop=0;query_loop<list_query.length&&flag==1;query_loop++)
-          {
-          
-          if(list_query[query_loop].includes("=%27")==true)
-          {
-            key_value[query_loop]=list_query[query_loop].split("=%27");
-            key_value[query_loop][1]=key_value[query_loop][1].slice(0,-3);
-            sign=2;
-          }
-          else
-          if(list_query[query_loop].includes("%3E")==true)
-          {
-            key_value[query_loop]=list_query[query_loop].split("%3E");
-              sign=1;
-          }
-          else
-          if(list_query[query_loop].includes("%3C")==true)
-          {
-            key_value[query_loop]=list_query[query_loop].split("%3C");
-              sign=-1;
-          }
-          else
-          if(list_query[query_loop].includes("=")==true)
-          {
-            key_value[query_loop]=list_query[query_loop].split("=");
-              sign=0;
-          }
-          switch(sign)
-              {
-                case 2:
-                  if((data[data_loop][key_value[query_loop][0]])=="n/a"||(data[data_loop][key_value[query_loop][0]])=="unknown")
-                    flag=0;
-                  else
-                    if((data[data_loop][key_value[query_loop][0]]).includes(key_value[query_loop][1])==false)
-                        flag=0;
-                    break;
-                case 1:
-                   var val1=data[data_loop][key_value[query_loop][0]];
-                    var val2=key_value[query_loop][1];
-                    val1=parseInt(val1);
-                    val2=parseInt(val2);
-                  if(isNaN(val1)||isNaN(val2))
-                    {
-                    console.log("NaN found");
-                    flag=0;
-                    }
-                    if((val1)<=(val2))
-                        flag=0;
-                    break;
-                case -1:
-                   var val1=data[data_loop][key_value[query_loop][0]];
-                    var val2=key_value[query_loop][1];
-                    val1=parseInt(val1);
-                    val2=parseInt(val2);
-			
-                      if(isNaN(val1)||isNaN(val2))
-                        {
-                        console.log("NaN found");
-                        flag=0;
-                        }
-                    if((val1)>=(val2))
-                        flag=0;
-                    break;
-                case 0:
-                    
-                    var val1=data[data_loop][key_value[query_loop][0]];
-                    var val2=key_value[1];
-                    val1=parseInt(val1);
-                    val2=parseInt(val2);
-			
-                      if(isNaN(val1)||isNaN(val2))
-                        {
-                        console.log("NaN found");
-                        flag=0;
-                        }
-                    if((val1)!=(val2))
-                        flag=0;
-                      break;
-              } 
-          }
-          if(flag==1)
+            if(list_query[query_loop].includes("=%27")==true)
             {
-              results.push(data_loop);
+
+              console.log("\nDone till here");
+              key_value[query_loop]=list_query[query_loop].split("=%27");
+              key_value[query_loop][1]=key_value[query_loop][1].slice(0,-3);
+              object = object.filter(function (task) {
+                if(task[key_value[query_loop][0]]!='unknown'&&task[key_value[query_loop][0]]!='n/a')
+                return task[key_value[query_loop][0]].includes(key_value[query_loop][1]);
+            });
             }
-      }
-  
+            else
+            if(list_query[query_loop].includes("%3E")==true)
+            {
+              key_value[query_loop]=list_query[query_loop].split("%3E");
+                object=object.filter(object=>parseInt(object[key_value[query_loop][0]])>parseInt(key_value[query_loop][1]));    
+            }
+            else
+            if(list_query[query_loop].includes("%3C")==true)
+            {
+              key_value[query_loop]=list_query[query_loop].split("%3C");
+                object=object.filter(object=>parseInt(object[key_value[query_loop][0]])<parseInt(key_value[query_loop][1]));
+                
+            }
+            else
+            if(list_query[query_loop].includes("=")==true)
+            {
+              key_value[query_loop]=list_query[query_loop].split("=");
+                object=object.filter(object=>parseInt(object[key_value[query_loop][0]])==parseInt(key_value[query_loop][1]));    
+            }
+          console.log('\nLoop is runnning for '+query_loop+' times');
+          }
+  console.log('\nTotal recordds found are '+object.length);
   console.log("pathname", pathname);
   console.log("queryParameters", query);
-  if(results.length==0)
+  if(object.length==0)
   {
   response.writeHead(404, {
     'Content-type': 'text/plain'
@@ -127,17 +59,15 @@ http.createServer(function (request, response) {
   response.writeHead(200, {
     'Content-type': 'text/plain'});
 
-  for(var count_response=0;count_response<results.length;count_response++)
+  for(var count_response=0;count_response<object.length;count_response++)
   {
-    response.write("\nRecord "+(count_response+1)+'\n');
-    response.write('Name :-'+data[results[count_response]].name);
+    response.write("\n\nRecord "+(count_response+1)+'\n');
+    response.write('Name :-'+object[count_response].name);
     for(var count_query=0;count_query<list_query.length;count_query++)
     {
-      if(key_value[count_query][0]=='name')
-      continue;
-      response.write('\n'+key_value[count_query][0]+' :- '+data[results[count_response]][key_value[count_query][0]]+'\t');
-    }
+      if(key_value[count_query][0]!='name')
+      response.write('\n'+key_value[count_query][0]+' :- '+object[count_response][key_value[count_query][0]]+'\t');
+     }
   }
  response.end();
 }).listen(7000);
-
