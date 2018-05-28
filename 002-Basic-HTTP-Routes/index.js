@@ -23,14 +23,17 @@ http.createServer(function (request, response) {
     {
 
       var i;
-      var s=query.slice(8,-3);
+      var a=query.indexOf("%22");
+      var b=query.indexOf("%22",a+1);
+      
+      var s=query.slice(a+3,b);
       for(i=0;i<data.length;i++)
       
       {
          var ap=data[i].name;
          if(ap.indexOf(s)>=0){
            flag=true;
-           array.push(ap);
+           array.push(data[i]);
          }
       }
      
@@ -51,7 +54,7 @@ http.createServer(function (request, response) {
          if(parseInt(ap)>parseInt(s) &&  ap!="unknown")
          {
            flag=true;
-           array.push(data[i].name);
+           array.push(data[i]);
          }
       }
       }
@@ -65,7 +68,7 @@ http.createServer(function (request, response) {
          if(parseInt(ap)<parseInt(s) && ap!="unknown")
          {
            flag=true;
-           array.push(data[i].name);
+           array.push(data[i]);
          }
       }
       }
@@ -100,7 +103,7 @@ http.createServer(function (request, response) {
          var ap=data[i].name;
          if(ap.indexOf(s)>=0 && parseInt(data[i].mass)>parseInt(d)){
            flag=true;
-           array.push(ap);
+           array.push(data[i]);
          }
        }
 
@@ -126,7 +129,7 @@ http.createServer(function (request, response) {
          var ap=data[i].name;
          if(ap.indexOf(s)>=0 && parseInt(data[i].mass)<parseInt(d)){
            flag=true;
-           array.push(ap);
+           array.push(data[i]);
          }
        }
 
@@ -157,7 +160,7 @@ http.createServer(function (request, response) {
   flag=0;
   var ii;
   for(ii=0;ii<array.length;ii++){
-    response.write(array[ii]+ "\n");
+    response.write(array[ii].name+ "-"+array[ii].mass+"\n");
   }
   array=[];
   response.end();
