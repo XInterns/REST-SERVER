@@ -14,7 +14,7 @@ const convertToJSON = (decodedQueryString) => {
 
 const processor = (encodedString) => {
     const query = decodeURI(encodedString);
-    return query === null ? {} : convertToJSON(query);
+    return query === 'null' ? {} : convertToJSON(query);
 }
 
 
