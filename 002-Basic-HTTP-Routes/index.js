@@ -19,7 +19,7 @@ http.createServer(function (request, response) {
   console.log("queryParameters", query);
   
   if(pathname=="/people"){
-    if (query.indexOf("name") >=0 && !(query.indexOf("mass")>=0))
+    if (query.indexOf("name=") >=0 && !(query.indexOf("mass")>=0))
     {
 
       var i;
@@ -38,7 +38,7 @@ http.createServer(function (request, response) {
       }
      
     }
-    else if(query.indexOf("mass")>=0 && !(query.indexOf("name") >=0))
+    else if(query.indexOf("mass>")>=0 ||query.indexOf("mass<")>=0&& !(query.indexOf("name=") >=0))
     {
       var i;
       var s=query.slice(7);
@@ -74,7 +74,7 @@ http.createServer(function (request, response) {
       }
       
     }
-    else if(query.indexOf("name") >=0 && query.indexOf("mass")>=0)
+    else if(query.indexOf("name=") >=0 && (query.indexOf("mass>")>=0|| query.indexOf("mass<")>=0))
     {
       
       var i;
@@ -87,7 +87,7 @@ http.createServer(function (request, response) {
       {
         var c=query.indexOf("%3E");
         var d;
-        if(query.indexOf("name")<query.indexOf("mass"))
+        if(query.indexOf("name=")<query.indexOf("mass"))
         {
           d=query.slice(c+3);
           
@@ -113,7 +113,7 @@ http.createServer(function (request, response) {
       {
         var c=query.indexOf("%3C");
         var d;
-        if(query.indexOf("name")<query.indexOf("mass"))
+        if(query.indexOf("name=")<query.indexOf("mass"))
         {
           d=query.slice(c+3);
          
@@ -152,17 +152,19 @@ http.createServer(function (request, response) {
   
   else{
   response.writeHead(200,{
-    'Content-type':'text/plain'
+    'Content-type':'application/json'
   });
-  response.write('Hello Node JS Server Response\n');
   response.write('200\n');
   
   flag=0;
   var ii;
   for(ii=0;ii<array.length;ii++){
-    response.write(array[ii].name+ "-"+array[ii].mass+"\n");
+    response.write(JSON.stringify(array[ii])+"\n");
+    
   }
+  
   array=[];
   response.end();
 }
+
 }).listen(7000);
