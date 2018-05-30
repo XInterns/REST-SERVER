@@ -133,16 +133,19 @@ else
   });
 
   response.write('\nStatus:200\n');
-  for(var print_loop=0;print_loop<out.length;print_loop++)
-  {
-      response.write('\n\n\n\nRecord '+(print_loop+1));
-      for(var print_query=0;print_query<f.length;print_query++)
-      {
-         response.write('\n'+g[print_query]+'  '+out[print_loop][g[print_query]]);
-      }
+
+  response.write(JSON.stringify(out,null,'\t'));
+  
+  // for(var print_loop=0;print_loop<out.length;print_loop++)
+  // {
+  //     response.write('\n\n\n\nRecord '+(print_loop+1));
+  //     for(var print_query=0;print_query<f.length;print_query++)
+  //     {
+  //        response.write('\n'+g[print_query]+'  '+out[print_loop][g[print_query]]);
+  //     }
 
 
-  }
+  // }
   
  
 }
