@@ -192,16 +192,14 @@ http.createServer(function (request, response) {
       'Content-type': 'text/plain'
       
     });
-    console.log("sdf");
-    response.write('400 Error\n');
+    
     response.end();
   }
   
   else{
   response.writeHead(200,{
-    'Content-type':'text/plain'
+    'Content-type':'application/json'
   });
-  response.write('200\n');
   
   flag=0;
   var ii;
