@@ -11,20 +11,8 @@ Code the following routes using `node.js` `http` module
 :art: Please write proper variable names , Write a readable code so that others can read and understand 
 
 // Edit Made by Branch Sailesh
-objective 1,2 and 3 are completed in this program.
-
-It will not work if a request ask for age, though it will work fine for exisiting properties like mass, height , hair_color etc;
-
-now it can process multiple request (more than 2) in same query.
-
-The result will be shown by the name of the Character.
-
-For character matching, this program only works if the character to be searched is enclosed in single qoute not in double qoutes
-
-Number of lines can be reduced by using functions, as much of the process for single request and multiple request (in same query) is same.
-Results are shown in the browser.
 
 Example query:- 
-http://localhost:7000/people?name='a'&/people?height>40&/people?mass>100&/people?skin_color='f'
+http://localhost:7000/people?name='a'&height={"gt":"40"}&mass={"gt":100}
 
-This will return only Wilhuff Tarkin , as only this character fulfils all the requests.
+This will return only "Jabba Desilijic Tiure" and "Chewbacca" , as only this character fulfils all the requests.
