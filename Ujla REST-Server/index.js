@@ -76,7 +76,7 @@ http.createServer(function (request, response)
           return y
         }) 
         console.log(ans)
-        response.write("\n\nRequired Records are: "+JSON.stringify(ans))
+        response.write("\n\nRequired Records are: "+JSON.stringify(ans,null, '\t'))
       }
       response.end();  
 }).listen(7000);
