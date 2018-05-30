@@ -1,6 +1,7 @@
 var http = require('http');
 var url = require('url');
 var data = require('./data.json');  //database file
+var lis;
 
 http.createServer(function (request, response) {
   const {pathname,query} = url.parse(request.url);
@@ -56,12 +57,7 @@ http.createServer(function (request, response) {
           var value = parseInt(second); //the value to be found
 
           console.log(value);
-         filter_query = filter_query.filter(x => x[first] < value).map; /*( x => {
-          y={};
-          y.name = x.name;
-          y.mass = x.mass;
-          return y;
-        });        */
+         filter_query = filter_query.filter(x => x[first] < value).map; 
       }
     i++; 
     }
@@ -70,16 +66,16 @@ http.createServer(function (request, response) {
       y.name = x.name;
       y.mass = x.mass;
       y.height= x.height;
-  /*    response.write("Answer :"+y.prototype.toString(y.name));*/
       return y;
     });        
-  console.log("\n",result);
+    
+  console.log("\n",JSON.stringify(result)); //null,'\t'));
   if(filter_query.length>0){  //if there is some output
   response.writeHead(200, {
     'Content-type': 'text/plain'
   });
-  response.write(' Status returned: 200 ->Successful');
-  //response.write("Answer :"+y.prototype.toString(y.name));
+  response.write(' Status returned: 200 ->Successful \n');
+  response.write(JSON.stringify(result, null,'\t'));
   response.end();
 }
 else{
@@ -89,4 +85,4 @@ else{
   response.write('Error 404 ->Data not found');
   response.end();
 }
-}).listen(2000);
+}).listen(2001);
