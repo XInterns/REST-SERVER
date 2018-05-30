@@ -19,8 +19,7 @@ http.createServer(function (request, response) {
   console.log("queryParameters", query);
   
   if(pathname=="/people"){
-<<<<<<< HEAD
-    if (query.indexOf("name=") >=0 && !(query.indexOf("mass")>=0))
+    if (query.indexOf("name=") >=0 && !(query.indexOf("mass=")>=0))
     {
 
       var i;
@@ -28,155 +27,159 @@ http.createServer(function (request, response) {
       var b=query.indexOf("%22",a+1);
       
       var s=query.slice(a+3,b);
-=======
-    if (query.indexOf("name") >=0 && !(query.indexOf("mass")>=0))
-    {
-
-      var i;
-      var s=query.slice(8,-3);
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
       for(i=0;i<data.length;i++)
       
       {
          var ap=data[i].name;
          if(ap.indexOf(s)>=0){
            flag=true;
-<<<<<<< HEAD
            array.push(data[i]);
-=======
-           array.push(ap);
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
          }
       }
      
     }
-<<<<<<< HEAD
-    else if(query.indexOf("mass>")>=0 ||query.indexOf("mass<")>=0&& !(query.indexOf("name=") >=0))
-=======
-    else if(query.indexOf("mass")>=0 && !(query.indexOf("name") >=0))
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
+    else if((query.indexOf("mass=")>=0 ||query.indexOf("mass=")>=0) && !(query.indexOf("name=") >=0))
     {
-      var i;
-      var s=query.slice(7);
-      
-      if(query.includes("%3E"))
+      var theString = query;
+      var length=theString.split(":").length - 1;
+      if(length==1)
       {
+        var a=query.indexOf("%22");
+        var b=query.indexOf("%22",a+1);
+        var s=theString.slice(a+3,b);
+        
+        if(s=="lt")
+        {
+          var sa=query.indexOf(":");
+          var p=query.slice(sa+1,-1);
+          for(i=0;i<data.length;i++){
+            ap=data[i].mass;
+            if(parseInt(ap)<parseInt(p))
+            {
+              flag=true;
+              array.push(data[i]);
+            }
+          }
+      
+          
+        }
+        if(s=="gt")
+        {
+          var sa=query.indexOf(":");
+          var p=query.slice(sa+1,-1);
+          for(i=0;i<data.length;i++){
+            ap=data[i].mass;
+            if(parseInt(ap)>parseInt(p))
+            {
+              flag=true;
+              array.push(data[i]);
+            }
+          }
+        }
+       
+      }
+      if(length==2)
+      {
+        var as=query.indexOf(",");
+        var se1=query.indexOf(":");
+        var se2=query.indexOf(":",se1+1);
+        var string=query;
+        var sd1=string.slice(se1+1,as);
+        var sd2=string.slice(se2+1,-1);
+        for(i=0;i<data.length;i++){
+          ap=data[i].mass;
+          
+          if(parseInt(ap)<parseInt(sd1) && parseInt(ap)>parseInt(sd2))
+          {
+            flag=true;
+            
+            array.push(data[i]);
+          }
+        }
+        
+
+
+      }
+
+      
+
+      
+    }
+    else if(query.indexOf("name=") >=0 && (query.indexOf("mass=")>=0|| query.indexOf("mass=")>=0))
+  {
+      var theString = query;
+      var length=theString.split(":").length - 1;
+
+      if(length==1)
+      {
+        var ae=query.indexOf(":");
+        var ee=query;
+        var sw=ee.slice(ae-5,ae-3);
+        var fa=query.indexOf("}");
+        var value=query.slice(ae+1,fa);
+        console.log(value);
+
+        var op=query.indexOf("name=");
+        var sp1=query.indexOf("%22",op);
+        var sp2=query.indexOf("%22",sp1+1);
+        var ad=query.slice(sp1+3,sp2);
+       
+        if( sw=="gt")
+        {
+          for(i=0;i<data.length;i++)
+      
+       {
+         var ap=data[i].name;
+         if(ap==ad && parseInt(data[i].mass)>parseInt(value))
+         {
+           flag=true;
+           array.push(data[i]);
+         }
+       }
+        }
+        if(sw=="lt")
+        {
+          
+          for(i=0;i<data.length;i++)
+      
+          {
+            var ap=data[i].name;
+            if(ap.indexOf(ad)>=0 && parseInt(data[i].mass)<parseInt(value))
+            {
+              flag=true;
+              array.push(data[i]);
+              
+            }
+          }
+        }
+      }
+      if(length==2)
+      {
+        var as=query.indexOf(",");
+        var se1=query.indexOf(":");
+        var se2=query.indexOf(":",se1+1);
+        var string=query;
+        var sd1=string.slice(se1+1,as);
+        var ff=string.indexOf("}");
+        var sd2=string.slice(se2+1,ff);
+
+        var op=query.indexOf("name=");
+        var sp1=query.indexOf("%22",op);
+        var sp2=query.indexOf("%22",sp1+1);
+        var ad=query.slice(sp1+3,sp2);
         
         for(i=0;i<data.length;i++)
       
-      {
-         var ap=data[i].mass;
-         
-         if(parseInt(ap)>parseInt(s) &&  ap!="unknown")
-         {
-           flag=true;
-<<<<<<< HEAD
-           array.push(data[i]);
-=======
-           array.push(data[i].name);
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
-         }
-      }
-      }
-      else if(query.includes("%3C"))
-      {
-        for(i=0;i<data.length;i++)
-      
-      {
-         var ap=data[i].mass;
-         
-         if(parseInt(ap)<parseInt(s) && ap!="unknown")
-         {
-           flag=true;
-<<<<<<< HEAD
-           array.push(data[i]);
-=======
-           array.push(data[i].name);
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
-         }
-      }
-      }
-      
-    }
-<<<<<<< HEAD
-    else if(query.indexOf("name=") >=0 && (query.indexOf("mass>")>=0|| query.indexOf("mass<")>=0))
-=======
-    else if(query.indexOf("name") >=0 && query.indexOf("mass")>=0)
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
-    {
-      
-      var i;
-      var a=query.indexOf("%22");
-      var b=query.indexOf("%22",a+1);
-      
-      var s=query.slice(a+3,b);
-
-      if(query.indexOf("%3E")>=0)
-      {
-        var c=query.indexOf("%3E");
-        var d;
-<<<<<<< HEAD
-        if(query.indexOf("name=")<query.indexOf("mass"))
-=======
-        if(query.indexOf("name")<query.indexOf("mass"))
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
-        {
-          d=query.slice(c+3);
-          
-        }
-        else{
-          var e = query.indexOf("&");
-          d= query.slice(c+3,e);
-        }
-     
-        for(i=0;i<data.length;i++)
-      
-       {
-         var ap=data[i].name;
-         if(ap.indexOf(s)>=0 && parseInt(data[i].mass)>parseInt(d)){
-           flag=true;
-<<<<<<< HEAD
-           array.push(data[i]);
-=======
-           array.push(ap);
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
-         }
-       }
-
-
-      }
-      if(query.indexOf("%3C")>=0)
-      {
-        var c=query.indexOf("%3C");
-        var d;
-<<<<<<< HEAD
-        if(query.indexOf("name=")<query.indexOf("mass"))
-=======
-        if(query.indexOf("name")<query.indexOf("mass"))
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
-        {
-          d=query.slice(c+3);
-         
-        }
-        else{
-          var e = query.indexOf("&");
-          d= query.slice(c+3,e);
-        }
-       
-        for(i=0;i<data.length;i++)
-      
-       {
-         var ap=data[i].name;
-         if(ap.indexOf(s)>=0 && parseInt(data[i].mass)<parseInt(d)){
-           flag=true;
-<<<<<<< HEAD
-           array.push(data[i]);
-=======
-           array.push(ap);
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
-         }
-       }
-
+          {
+            var ap=data[i].name;
+            if(ap.indexOf(ad)>=0 && parseInt(data[i].mass)<parseInt(sd1) && parseInt(data[i].mass)>(sd2))
+            {
+              flag=true;
+              array.push(data[i]);
+              
+            }
+          }
+        
       }
       
     }
@@ -196,21 +199,14 @@ http.createServer(function (request, response) {
   
   else{
   response.writeHead(200,{
-<<<<<<< HEAD
-    'Content-type':'application/json'
-  });
-=======
     'Content-type':'text/plain'
   });
-  response.write('Hello Node JS Server Response\n');
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
   response.write('200\n');
   
   flag=0;
   var ii;
   for(ii=0;ii<array.length;ii++){
-<<<<<<< HEAD
-    response.write(JSON.stringify(array[ii])+"\n");
+    response.write(JSON.stringify(array[ii],null,"\t"));
     
   }
   
@@ -219,12 +215,3 @@ http.createServer(function (request, response) {
 }
 
 }).listen(7000);
-=======
-    response.write(array[ii]+ "\n");
-  }
-  response.end();
-}
-}).listen(7000);
-
-
->>>>>>> e0719ca9fefefa4e427e4193b271413b30c5444f
