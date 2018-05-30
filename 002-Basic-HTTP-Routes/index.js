@@ -72,7 +72,9 @@ http.createServer(function (request, response) {
     response.writeHead(200, {
       'Content-type': 'text/plain'
     });
-    response.write(' Status returned: 200');
+    response.write(' Status returned: 200\n');
+
+    response.write("The Object returned are: "+JSON.stringify(filter_query,null,'\t'));
     
    }
    else{
