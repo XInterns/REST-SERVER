@@ -1,7 +1,7 @@
 var http = require('http');
 var url = require('url');
 var data = require('./data.json');
-
+var datanew=data;
 http.createServer(function (request, response) {
   response.writeHead(200, {
     'Content-type': 'text/plain'
@@ -15,288 +15,129 @@ http.createServer(function (request, response) {
   console.log("pathname", pathname);
   console.log("queryParameters", query);
   
+  var arr1=[]; var k=0;
+  var arr2=[]; var l=0;
+
+  if(pathname=='/people')
+  if(query!=null )
+  {
+  var list=query.split("&");
+  //console.log(list);
+  var len=list.length;
+  //console.log(list.length);
+  var i;
   
-   if((pathname=='/people'&& query.indexOf("mass")!=-1 && query.indexOf("name")!=-1))
-   {  
-     if(query.indexOf('n')<query.indexOf('m'))
-    { 
-     var i,j;
-     
-    if(query.includes("%3E"))
-    {
-       var pairs=query.split("%27");
-     //var pair=query.split(pairs[1])
-     var name1=pairs[1];
-     /*for( j=0;j<pairs.length;j++)
+  for(i=0;i<len;i++)
+  {
+      if(list[i].indexOf("=")!=-1 && list[i].indexOf("%27")!=-1)
       {
-        var pair=pairs[1].split("");*/
-      
-      var pair=pairs[2].split("%3E");
-        var mass1=parseInt(pair[1]);
-      
-        var c=0; var s=0;
-        for(i=0;i<data.length;i++)
-        { 
-       
-          if(data[i].mass>mass1 && data[i].name.includes(name1))
-          {  c=1;
-             if(s==0)
-            {
-            response.write("200"+'\n');
-            s=1;
-            }
-          
-            response.write(data[i].name+"  ");
-            response.write(data[i].mass+'\n');
+          var ans=list[i].split('%27');
+          console.log(ans);
+      //response.write(ans[1]);
+      var temp=ans[0].slice(0,-1);
+      console.log(temp);
+      var par1=ans[1];
+      console.log(par1);
+      var j;
+      for(j=0;j<data.length;j++)
+      { // JSON.stringify(obj);
+        // console.log(data[j][temp]);
+          if(data[j][temp].includes(par1))
+          {  // console.log("yay");
+              //var d=JSON.stringify(data[j]);
+              //response.write(data[j][temp]+'\n');
+              arr1[k++]=data[j];
           }
-        }
-        
       }
-    }  
-      
-      else if(query.includes("%3C"))
-      {  
-        var pairs=query.split("%27");
-        //var pair=query.split(pairs[1])
-         var name1=pairs[0];
-         var pair=pairs[1].split("%3C");
-         var mass1=parseInt(pair[1]);
-          var i;
-         var c=0; var s=0;
-         for(i=0;i<data.length;i++)
-         { 
-        
-           if(data[i].mass<mass1 && data[i].name.includes(name1))
-           {  c=1;
-              if(s==0)
-             {
-             response.write("200"+'\n');
-             s=1;
-             }
-           
-             response.write(data[i].name+"  ");
-             response.write(data[i].mass+'\n');
-           }
-         }
-         
-       }
-       else 
-       {  
-         var pairs=query.split("%27");
-         //var pair=query.split(pairs[1])
-          var name1=pairs[1];
-          var pair=pairs[2].split("=");
-          var mass1=parseInt(pair[1]);
-        
-          var c=0; var s=0;
-          for(i=0;i<data.length;i++)
-          { 
-         
-            if(data[i].mass==mass1 && data[i].name.includes(name1))
-            {  c=1;
-               if(s==0)
-              {
-              response.write("200"+'\n');
-              s=1;
-              }
-            
-              response.write(data[i].name+"  ");
-              response.write(data[i].mass+'\n');
-            }
-          }
-          
-        }
-
-      if(c==0)
-      {  
-        response.write("404"+'\n');
-        response.write("NOT FOUND");
-        //alert("NO VALUE");
+      if(len==1)
+      { for(let f=0;f<arr1.length;f++)
+        response.write(JSON.stringify(arr1[f],null,'\t')+'\n');
       }
-    
-
- else if(query.indexOf('n')>query.indexOf('m'))
- {
-  if((pathname=='/people'&& query.indexOf("mass")!=-1 && query.indexOf("name")!=-1))
-  {  var i,j;
-     
-    if(query.includes("%3E"))
-    {
-       var pairs=query.split("%27");
-     //var pair=query.split(pairs[1])
-     var name1=pairs[1];
-     /*for( j=0;j<pairs.length;j++)
+      }
+      /*else if(list[i].includes("="))
       {
-        var pair=pairs[1].split("");*/
-      
-      var pair=pairs[0].split("%3E");
-        
-       var mass1=0; var inc=1;
-       var j; var k=0;
-      for(j=0;pair[1][j]!='&';j++)
-       {    
-            mass1[k++]=pair[1][j];
-           //mass1=mass1*inc+pair[1][j];
-            
-            // inc=inc*10;
-       }
-       
-        
-        var c=0; var s=0;
-        var f=mass1;
-        mass1=parseInt(f);
-        console.log(mass1);
-       
-        for(i=0;i<data.length;i++)
-        { 
-       
-          if(data[i].mass>mass1 && data[i].name.includes(name1))
-          {  c=1;
-             if(s==0)
-            {
-            response.write("200"+'\n');
-            s=1;
-            }
-          
-            response.write(data[i].name+"  ");
-            response.write(data[i].mass+'\n');
-          }
-        }
-        
-      }
-    }  
-      
-      else if(query.includes("%3C"))
-      {  
-        var pairs=query.split("%27");
-        //var pair=query.split(pairs[1])
-         var name1=pairs[1];
-         var pair=pairs[2].split("%3C");
-         var mass1=parseInt(pair[1]);
-       
-         var c=0; var s=0;
-         for(i=0;i<data.length;i++)
-         { 
-        
-           if(data[i].mass<mass1 && data[i].name.includes(name1))
-           {  c=1;
-              if(s==0)
-             {
-             response.write("200"+'\n');
-             s=1;
-             }
-           
-             response.write(data[i].name+"  ");
-             response.write(data[i].mass+'\n');
-           }
-         }
-         
-       }
-       /*else 
-       {  
-         var pairs=query.split("%27");
-         //var pair=query.split(pairs[1])
-          var name1=pairs[1];
-          var pair=pairs[2].split("=");
-          var mass1=parseInt(pair[1]);
-        
-          var c=0; var s=0;
-          for(i=0;i<data.length;i++)
-          { 
-         
-            if(data[i].mass==mass1 && data[i].name.includes(name1))
-            {  c=1;
-               if(s==0)
-              {
-              response.write("200"+'\n');
-              s=1;
-              }
-            
-              response.write(data[i].name+"  ");
-              response.write(data[i].mass+'\n');
-            }
-          }
-          
-        }*/
-
-     /* if(c==0)
-      {  
-        response.write("404"+'\n');
-        response.write("NOT FOUND");
-        //alert("NO VALUE");
-      }*/
- } 
-}
-    else if(pathname=="/people" && query.indexOf("name")!=-1)
-    { 
-     
-      var pairs = query.split("%27");
-      
-      //for(int j=0;j<pairs.length;j++)
-     // {
-       // var pair=pairs[1].split("%22");
-        
-         var name1=pairs[1];
-     // }
-     var i;
-     var j;
-     var c=0; var s=0;
-     for(i=0;i<data.length;i++)
-      {  
-         if(data[i].name.includes(name1))
-         { c=1;
-          if(s==0)
-          {
-            response.write("200"+'\n');
-            s=1;
-          }
-           response.write(data[i].name+'\n');
-         }
-        // else{
-          // console.log("error");
-         //}
-      
-      }
-      if(c==0)
-      { 
-        response.write("404"+'\n');
-        response.write("NOT FOUND");
-        // alert("NO VALUE");
-      }
-    }
-    
-   else if(pathname=="/people" && query.indexOf("mass")!=-1)
-    {  var c=0;
-      var pairs=query.split("%3E");
-      //var pair=pairs[1].split("%22");
-      var mass1=parseInt(pairs[1]);
-      //var a=mass1[0];
-     // a=a+mass1[1]*10;
-
-      var i; var c=0; var s=0;
-      for(i=0;i<data.length;i++)
-      {   
-        if(data[i].mass>=mass1)
+        var ans=list[i].split("=");
+        var temp=ans[0];
+        console.log(temp);
+        var par=ans[1];
+        console.log(par);
+        var j;
+        for( j=0;j<data.length;j++)
         {
-            c=1;
-            //response.write("200"+'\n');
-            if(s==0)
-            {
-              response.write("200"+'\n');
-              s=1;
-            }
-            
-          response.write(data[i].name+'\n');
+          if(data[j][temp]==par)
+          {  //console.log(data[j][temp]);
+           // response.write(data[j].name+'\n');
+            arr2[l++]=data[j];
+          }
+        }
+
+      }*/
+      else if(list[i].includes("gt"))
+      {
+         var ans=list[i].split("=");
+         var temp=ans[0];
+         console.log(temp);
+         var par=ans[1];
+         
+         par=par.slice(par.indexOf(":")+1,-1);
+         console.log(par);
+         var j;
+         par=parseInt(par);
+         for(j=0;j<data.length;j++)
+         {
+           if(data[j][temp]>par)
+           { 
+             //console.log(data[j][temp]);
+            // response.write(data[j].name+'\n');
+            arr2[l++]=data[j];
+           }
+         }
+         if(len==1)
+         { for(let f=0;f<arr2.length;f++)
+           response.write(JSON.stringify(arr2[f],null,'\t')+'\n');
+         }
+      }
+      else if(list[i].includes("lt"))
+      {
+        var ans=list[i].split("=");
+        var temp=ans[0];
+        console.log(temp);
+        var par=ans[1];
+        par=par.slice(par.indexOf(":")+1,-1);
+        console.log(par);
+        var j;
+        par=parseInt(par);
+        for(j=0;j<data.length;j++)
+        {
+          if(data[j][temp]<par)
+          { 
+            //console.log(data[j][temp]);
+            //response.write(data[j].name+'\n');
+            arr2[l++]=data[j];
+          }
+        }
+        if(len==1)
+        { for(let f=0;f<arr2.length;f++)
+          response.write(JSON.stringify(arr2[f],null,'\t')+'\n');
         }
       }
-      if(c==0)
-      {
-        response.write("404"+'\n');
-        response.write("NOT FOUND");
-        //alert("NO VALUE");
+      response.write('\n')
+    }
+    var s=0;
+    for(k=0;k<arr1.length;k++)
+    {
+      for(l=0;l<arr2.length;l++)
+      { 
+        if(arr1[k].name==arr2[l].name)
+       { s=1; response.write(JSON.stringify(arr1[k],null,'\t')+'\n');}
       }
     }
-   
-response.end();
-
-}).listen(7000);
+    
+    }   
+  /* if(s==0)
+   {
+     response.writeHead(404,{'Content-type': 'text/JSON'});
+     response.end();
+   }*/
+   response.end();
+  }).listen(7000);
