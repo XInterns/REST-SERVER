@@ -1,88 +1,47 @@
 var http = require('http');
 var url = require('url');
 var data = require('./data.json');  //database file
-var lis;
-
-http.createServer(function (request, response) {
+var temp;
+http.createServer(function (request, response) {     //inline declaration of function
   const {pathname,query} = url.parse(request.url);
-
+  console.log("DECODED QUERY- "+query); //decoded query
   var query_list= query.split('&'); //separate the joined queries
-  var filter_query=data;
-
-  console.log("pathname:", pathname);
-  console.log("queryParameters:", query);
-  console.log("query-list:",query_list);
-
-   var l=query_list.length;
-   var i=0;
-   while(i<l)
-   {
-    if(query_list[i].includes('='))
-    {
-         var con_list=query_list[i].split('='); //separating the name and the value
-         var first = con_list[0];
-         //console.log("conlist1="+con_list[1]);
-
-         if(con_list[1].includes('%22')|con_list[1].includes('%27'))
-         { // if the value to be checked is a string
-             // console.log("Entered if");
-         second=  con_list[1].slice(3,-3); //just taking a value
-         }
-         else second=con_list[1];
-         console.log(first);   //name
-         console.log(second);  //a    
-          filter_query=filter_query.filter( x =>x[first].includes(second));
-
-    } 
-
-      else if(query_list[i].includes('%3E')) // means >
-    {
-      var con_list=query_list[i].split('%3E'); //separating the name and the value
-         var first = con_list[0];
-         second=  con_list[1].slice(-3); //just taking a value
-         console.log(first);   //name
-       var value = parseInt(second); //the value to be found
-
-       console.log(value);
-        filter_query = filter_query.filter( x => x[first] > value) ;
-   
-      }
-    if( query_list[i].includes('%3C'))  // <
-      {  //means <
-          var con_list=query_list[i].split('%3C'); //separating the name and the value
-         var first = con_list[0];
-         second=  con_list[1].slice(-3); //just taking a value
-         console.log(first);   //name
-        // console.log(second);  //a
-          var value = parseInt(second); //the value to be found
-
-          console.log(value);
-         filter_query = filter_query.filter(x => x[first] < value).map; 
-      }
-    i++; 
-    }
-    var result= filter_query.map( x => {
-      y={};
-      y.name = x.name;
-      y.mass = x.mass;
-      y.height= x.height;
-      return y;
-    });        
-    
-  console.log("\n",JSON.stringify(result)); //null,'\t'));
-  if(filter_query.length>0){  //if there is some output
-  response.writeHead(200, {
-    'Content-type': 'text/plain'
-  });
-  response.write(' Status returned: 200 ->Successful \n');
-  response.write(JSON.stringify(result, null,'\t'));
-  response.end();
-}
-else{
-  response.writeHead(400, {  //if no matching data is found
-    'Content-type': 'text/plain'
-  });
-  response.write('Error 404 ->Data not found');
-  response.end();
-}
-}).listen(2001);
+  var result=data;
+  var a=query_list.length;
+  var pairs;   //key-value pairs
+  var q;   //stores the individual queries
+  for(var i=0;i<a;i++)
+  {   if((query_list[i].includes("=%27")) || (query_list[i].includes("=%22")))  // if it includes =" or ='
+      {
+          pairs=query_list[i].split("=");   //eg name="a"
+          q=decodeURI(pairs[1]).slice(1,-1);    //decoding the value portion   //reomoving the inverted commas
+          result=result.filter(function (wor) {
+            if(wor[pairs[0]]!='unknown' && wor[pairs[0]]!='n/a'){  //if there is a value
+              return wor[pairs[0]].includes(q);
+            }
+      });
+     }
+    else{
+        pairs=query_list[i].split("=");
+        q=decodeURI(pairs[1]) ;
+        var o=JSON.parse(q);
+        if(pairs[1].includes("lt")==true&&pairs[1].includes("gt")==true)
+                result=result.filter(result=>((parseInt(result[pairs[0]])<parseInt(o.lt))&&(parseInt(result[pairs[0]])>parseInt(o.gt))));  
+              else 
+                if(pairs[1].includes("gt"))
+                  result=result.filter(temp=>parseInt(temp[pairs[0]])>parseInt(o.gt));    
+                else
+                  result=result.filter(temp=>(parseInt(temp[pairs[0]])<parseInt(o.lt)));    
+ }
+}   // console.log("pathname", pathname); console.log("queryParameters", query); 
+     if(result.length==0)  // if data isnt found
+     { response.writeHead(404, {   //error code
+       'Content-type': 'application/JSON'});
+       response.end();
+     }
+     else{
+     response.writeHead(200, { 'Content-type': 'application/JSON'});    //search successful 
+     response.write(JSON.stringify(result,null,'\t '));  //displaying the result
+    response.end();
+     }
+   }).listen(7000);
