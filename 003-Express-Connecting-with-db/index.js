@@ -17,6 +17,21 @@ app.use(express.static(`${__dirname}/public`));
 
 
 /**
+ * MySQL Server Connection
+ */
+var mysql = require('mysql')
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'Passw0rd@123',
+  database : 'interns',
+});
+
+connection.connect()
+
+app.set('sql-connection', connection);
+
+/**
  * AKA Routes
  */
 app.use('/people', people);
