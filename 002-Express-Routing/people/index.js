@@ -1,8 +1,9 @@
 const express = require('express');
+
 const router = express.Router();
 const middleware = require('./middleware');
 
-//this looks bad how to clear this
+// this looks bad how to clear this
 const _find = require('./methods/find');
 const _get = require('./methods/get');
 const _post = require('./methods/post');
