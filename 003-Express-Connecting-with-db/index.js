@@ -41,3 +41,5 @@ app.use('/people', people);
 
 // with env route
 app.listen(process.env.PORT, () => console.log(welcomeMessage(version, process.env.PORT)));
+
+//ask where to close the connection
